@@ -18,7 +18,8 @@ def getContour(img, imgContour):
 		area = cv2.contourArea(cnt)
 		peri = cv2.arcLength(cnt, True) # True shows that the shape is closed
 		approx = cv2.approxPolyDP(cnt, 0.02*peri, True)
-		if 4 <= len(approx) <= 7:
+		area = cv2.contourArea(cnt)
+		if 4 <= len(approx) <= 7 and area > area_min:
 			cv2.drawContours(imgContour, cnt, -1, (255, 0, 255), 7)
 			x, y, w, h = cv2.boundingRect(approx)
 			cv2.rectangle(imgContour, (x,y), (x+w, y+h), (0,255,0), 5)
@@ -30,7 +31,7 @@ def empty(a):
 # spawns a Window for changing the parameters
 def takeVal():
 
-	img = cv2.imread('Parameters.png')[:160, :, :]
+	img = cv2.imread('SysImages/Parameters.png')[:160, :, :]
 	img = cv2.resize(img, (340, 120))
 	
 	cv2.namedWindow('Parameters')
@@ -44,12 +45,13 @@ def takeVal():
 	cv2.createTrackbar('VALUE Max', 'Parameters', 255, 255, empty)
 	cv2.createTrackbar('Thresh1', 'Parameters', 0, 255, empty)
 	cv2.createTrackbar('Thresh2', 'Parameters', 225, 255, empty)
+	cv2.createTrackbar('Area Min', 'Parameters', 100, 1000, empty)
 
 
 read_temp = False
 db = pickle.load(save)
 try:
-	(h_min, h_max, s_min, s_max, v_min, v_max, threshold1, threshold2) = tuple(db.values())
+	(h_min, h_max, s_min, s_max, v_min, v_max, threshold1, threshold2, area_min) = tuple(db.values())
 except:
 	read_temp = True 
 	takeVal()
@@ -67,7 +69,8 @@ while True:
 		v_max = cv2.getTrackbarPos('VALUE Max', 'Parameters')
 		threshold1 = cv2.getTrackbarPos('Thresh1', 'Parameters') 
 		threshold2 = cv2.getTrackbarPos('Thresh2', 'Parameters')
-		db['h_min'], db['h_max'], db['s_min'], db['s_max'], db['v_min'], db['v_max'], db['threshold1'], db['threshold2'] = h_min, h_max, s_min, s_max, v_min, v_max, threshold1, threshold2
+		area_min = cv2.getTrackbarPos('Area Min', 'Parameters')
+		db['h_min'], db['h_max'], db['s_min'], db['s_max'], db['v_min'], db['v_max'], db['threshold1'], db['threshold2'], db['area_min'] = h_min, h_max, s_min, s_max, v_min, v_max, threshold1, threshold2, area_min
 
 	imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -107,6 +110,7 @@ while True:
 		print('Saved')
 		write.close()
 		cv2.destroyWindow('Parameters')
+		read_temp = False
 
 
 save.close()
