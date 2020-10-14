@@ -1,4 +1,4 @@
-import cv2
+from cv2 import cv2
 import pickle
 import numpy as np
 from math import sqrt
@@ -73,7 +73,7 @@ while True:
 	cv2.setMouseCallback('Image', mousePoints)
 
 	cv2.waitKey(1)
-
+	
 
 dist = abs(points[0,1] - points[1,1])
 print('Height Estimate: {:.2f}m'.format(dist / h))

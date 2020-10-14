@@ -1,28 +1,31 @@
-import cv2
+from cv2 import cv2
 import numpy as np
 import pickle
+import time
 
 
 save = open('Values/save.dat', 'rb')
 
 cap = cv2.VideoCapture(0)
-cap.set(3, 400)
-cap.set(4, 200)
+cap.set(3, 600)
+cap.set(4, 300)
 
 
 # detecting the standard in the image and marking it
 def getContour(img, imgContour):
 	contour, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-	
+	found = False
 	for cnt in contour:
 		area = cv2.contourArea(cnt)
 		peri = cv2.arcLength(cnt, True) # True shows that the shape is closed
 		approx = cv2.approxPolyDP(cnt, 0.02*peri, True)
 		area = cv2.contourArea(cnt)
 		if 4 <= len(approx) <= 7 and area > area_min:
+			found = True
 			cv2.drawContours(imgContour, cnt, -1, (255, 0, 255), 7)
 			x, y, w, h = cv2.boundingRect(approx)
 			cv2.rectangle(imgContour, (x,y), (x+w, y+h), (0,255,0), 5)
+	return found
 
 
 def empty(a):
@@ -59,6 +62,7 @@ except:
 while True:
 	
 	_, img = cap.read()
+	img_copy = img.copy()
 
 	if read_temp:
 		h_min = cv2.getTrackbarPos('HUE Min', 'Parameters')
@@ -86,7 +90,7 @@ while True:
 	imgCanny = cv2.Canny(mask, threshold1, threshold2)
 	kernel = np.ones((5,5))
 	imgDil = cv2.dilate(imgCanny, kernel, iterations=1)
-	getContour(imgDil, img)
+	found = getContour(imgDil, img)
 
 	hstack = np.hstack([img, result, mask])
 
@@ -111,6 +115,13 @@ while True:
 		write.close()
 		cv2.destroyWindow('Parameters')
 		read_temp = False
+	elif cv2.waitKey(1) &0xFF == ord('c'):
+		blur = cv2.Laplacian(img_copy, cv2.CV_64F).var()
+		if found and blur > 500:
+			nowTime = time.time()
+			cv2.imwrite('User'+'/'+str(int(blur))+"_"+str(nowTime)+".png", img_copy)
+			print('Captured')
+			break
 
 
 save.close()
