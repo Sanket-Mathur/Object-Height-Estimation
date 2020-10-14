@@ -116,12 +116,16 @@ while True:
 		cv2.destroyWindow('Parameters')
 		read_temp = False
 	elif cv2.waitKey(1) &0xFF == ord('c'):
+		# saving the images of the if its sharp and standard is recognicable
 		blur = cv2.Laplacian(img_copy, cv2.CV_64F).var()
-		if found and blur > 500:
+		if found and blur > 250:
 			nowTime = time.time()
 			cv2.imwrite('User'+'/'+str(int(blur))+"_"+str(nowTime)+".png", img_copy)
 			print('Captured')
-			break
+			img[:, :, :] = 0
+			hstack = np.hstack([img, result, mask])
+			cv2.imshow('Stacked', hstack)
+			cv2.waitKey(10000)
 
 
 save.close()
