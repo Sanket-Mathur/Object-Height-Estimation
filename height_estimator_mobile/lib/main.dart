@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'dart:convert';
 
 import './Widget/buttons.dart';
 import './Widget/settings.dart';
+import './API/api.dart';
+import './Models/SelectImage.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,13 +25,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   void _showInputButtons(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
         return Container(
           height: 100,
-          child: Buttons(),
+          child: Buttons(callback),
         );
       },
     );
@@ -43,6 +48,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  var data;
+  var text = 'Temp';
+
+  void getRes() async {
+    data = await Getdata('http://10.0.2.2:5000/api?Query=SomeQuery');
+    var decodedData = jsonDecode(data);
+    setState(() {
+      text = decodedData['Query'];
+    });
+  }
+
+  callback() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +75,31 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Center(
-        child: Text('No Image Selected'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Center(
+              child: SelectImage.displayImage(),
+              // Image.asset('assets/images/imgPH.png'),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(25),
+            child: RaisedButton(
+              onPressed: getRes,
+              color: Colors.blue,
+              child: Text(
+                'Estimate',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

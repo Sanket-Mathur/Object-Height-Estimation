@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../Models/SelectImage.dart';
+
 class Buttons extends StatelessWidget {
+
+  Function callback;
+  Buttons(this.callback);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,7 +19,11 @@ class Buttons extends StatelessWidget {
                 backgroundColor: Colors.blue,
                 child: IconButton(
                   icon: Icon(Icons.add_a_photo_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    var obj = SelectImage();
+                    obj.selectCamera(callback);
+                    Navigator.pop(context);
+                  },
                   color: Colors.white,
                   iconSize: 30,
                 ),
@@ -23,7 +33,11 @@ class Buttons extends StatelessWidget {
                 backgroundColor: Colors.blue,
                 child: IconButton(
                   icon: Icon(Icons.add_photo_alternate_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    var obj = SelectImage();
+                    obj.selectGallery(callback);
+                    Navigator.pop(context);
+                  },
                   color: Colors.white,
                   iconSize: 30,
                 ),
