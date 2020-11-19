@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'dart:convert';
 
 import './Widget/buttons.dart';
 import './Widget/settings.dart';
-import './API/api.dart';
 import './Models/SelectImage.dart';
 
 void main() => runApp(MyApp());
@@ -25,7 +23,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void _showInputButtons(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -46,17 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
         return Settings();
       },
     );
-  }
-
-  var data;
-  var text = 'Temp';
-
-  void getRes() async {
-    data = await Getdata('http://10.0.2.2:5000/api?Query=SomeQuery');
-    var decodedData = jsonDecode(data);
-    setState(() {
-      text = decodedData['Query'];
-    });
   }
 
   callback() {
@@ -88,7 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: EdgeInsets.all(25),
             child: RaisedButton(
-              onPressed: getRes,
+              // onPressed: getRes,
+              onPressed: SelectImage.found ? () {} : null,
               color: Colors.blue,
               child: Text(
                 'Estimate',
