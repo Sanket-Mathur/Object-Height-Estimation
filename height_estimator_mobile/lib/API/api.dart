@@ -9,3 +9,12 @@ Future identifyStandard(Map<String, String> data) async{
   );
   return response.body;
 }
+
+Future settingStandard(Map<String, dynamic> data) async{
+  http.Response response = await http.post(
+    'http://10.0.2.2:5000/setting',
+    headers: {"Content-Type": "application/json"},
+    body: json.encode(data),
+  );
+  return response.body;
+}

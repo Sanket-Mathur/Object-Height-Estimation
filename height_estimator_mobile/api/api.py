@@ -9,7 +9,7 @@ app = Flask(__name__)
 def identifyStandard():
     data = request.json
     d = {}
-    d['found'], d['img'] = identifyMark(data['image'])
+    d['found'], d['img'], d['height'] = identifyMark(data['image'])
     return jsonify(d)
     
 if __name__ == '__main__':

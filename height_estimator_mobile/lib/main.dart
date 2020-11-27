@@ -49,6 +49,26 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  Widget popup(BuildContext ctx) {
+    return AlertDialog(
+      title: Center(
+          child: Text((Settings.unit == 'm'
+                      ? SelectImage.height
+                      : SelectImage.height * 0.305)
+                  .toString() +
+              ' ' +
+              Settings.unit)),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            Navigator.of(ctx).pop();
+          },
+          child: Icon(Icons.check),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +88,19 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Center(
               child: SelectImage.displayImage(),
-              // Image.asset('assets/images/imgPH.png'),
             ),
           ),
           Padding(
             padding: EdgeInsets.all(25),
             child: RaisedButton(
               // onPressed: getRes,
-              onPressed: SelectImage.found ? () {} : null,
+              onPressed: SelectImage.found
+                  ? () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext ctx) => popup(ctx));
+                    }
+                  : null,
               color: Colors.blue,
               child: Text(
                 'Estimate',

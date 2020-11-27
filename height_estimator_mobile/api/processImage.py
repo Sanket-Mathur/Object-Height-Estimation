@@ -13,6 +13,7 @@ def getContour(img, imgContour):
 	contour, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 	global h
 	found = False
+	h = 0
 	for cnt in contour:
 		area = cv2.contourArea(cnt)
 		peri = cv2.arcLength(cnt, True) # True shows that the shape is closed
@@ -23,7 +24,12 @@ def getContour(img, imgContour):
 			cv2.drawContours(imgContour, cnt, -1, (255, 0, 255), 3)
 			x, y, w, h = cv2.boundingRect(approx)
 			cv2.rectangle(imgContour, (x,y), (x+w, y+h), (0,255,0), 3)
-	return found
+	return found, h
+
+# Calculate Height of the image
+def calculateHeight(image, standardHeight):
+	imageHeight = image.shape[0]
+	return float('{:.2f}'.format(imageHeight / standardHeight))
 
 # Mark the images if standard detected
 def identifyMark(base64Image):
@@ -39,8 +45,10 @@ def identifyMark(base64Image):
 	imgCanny = cv2.Canny(mask, threshold1, threshold2)
 	kernel = np.ones((5,5))
 	imgDil = cv2.dilate(imgCanny, kernel, iterations=1)
-	found = getContour(imgDil, image)
+	found, standardHeight = getContour(imgDil, image)
 
 	img_str = cv2.imencode('.jpg', image)[1].tobytes()
 	base64ImageReturn = base64.b64encode(img_str) 
-	return ('yes' if found else 'no'), base64ImageReturn
+	
+	height = calculateHeight(image, standardHeight)
+	return ('yes' if found else 'no'), base64ImageReturn, height

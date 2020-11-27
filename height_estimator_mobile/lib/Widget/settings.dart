@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
+List<bool> _selectedUnit = [true, false];
+
 class Settings extends StatefulWidget {
+  static String unit = 'm';
+
   @override
   _State createState() => _State();
 }
 
 class _State extends State<Settings> {
-  List<bool> _selectedUnit = [true, false];
 
   void _selectToggle(int index) {
     setState(() {
       for (int i = 0; i < _selectedUnit.length; i++) {
         _selectedUnit[i] = i == index;
+      }
+      if (_selectedUnit[0]) {
+        Settings.unit = 'm';
+      } else {
+        Settings.unit = 'ft';
       }
     });
   }
