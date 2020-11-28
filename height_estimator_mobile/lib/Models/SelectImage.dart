@@ -6,7 +6,6 @@ import '../API/api.dart';
 
 class SelectImage {
   static var _image;
-  static var _image_dil;
   static bool found = false;
   static var height = 0.0;
 
@@ -32,7 +31,6 @@ class SelectImage {
       found = true;
       height = decodedData['height'];
     } else {
-      print('Not Found');
       found = false;
     }
     cb();
@@ -53,24 +51,8 @@ class SelectImage {
       _image.writeAsBytesSync(img64);
       found = true;
     } else {
-      print('Not Found');
       found = false;
     }
-    cb();
-  }
-
-  void settingValues(List<Map> values, Function cb) async {
-    List<int> imageBytes = _image.readAsBytesSync();
-    String base64Image = base64Encode(imageBytes);
-    final result = await settingStandard({
-      "image": base64Image,
-      "values": values
-    });
-    var decodedData = jsonDecode(result);
-    List<int> img64 = base64Decode(decodedData['img']);
-    _image.writeAsBytesSync(img64);
-    List<int> img64_dil = base64Decode(decodedData['img_dil']);
-    _image_dil.writeAsBytesSync(img64_dil);
     cb();
   }
 }

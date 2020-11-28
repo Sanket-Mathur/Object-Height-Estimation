@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 import './Widget/buttons.dart';
-import './Widget/settings.dart';
 import './Models/SelectImage.dart';
+
+List<bool> selectedUnit = [true, false];
 
 void main() => runApp(MyApp());
 
@@ -35,29 +36,35 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _showSettings(BuildContext ctx) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: ctx,
-      builder: (_) {
-        return Settings();
-      },
-    );
-  }
-
   callback() {
     setState(() {});
+  }
+
+  var unit = 'm';
+
+  void _selectToggle(int index) {
+    setState(() {
+      for (int i = 0; i < selectedUnit.length; i++) {
+        selectedUnit[i] = i == index;
+      }
+      if (selectedUnit[0]) {
+        unit = 'm';
+      } else {
+        unit = 'ft';
+      }
+    });
+    print(selectedUnit);
   }
 
   Widget popup(BuildContext ctx) {
     return AlertDialog(
       title: Center(
-          child: Text((Settings.unit == 'm'
-                      ? SelectImage.height
-                      : SelectImage.height * 0.305)
-                  .toString() +
-              ' ' +
-              Settings.unit)),
+        child: Text(
+            (unit == 'm' ? SelectImage.height : SelectImage.height * 0.305)
+                    .toString() +
+                ' ' +
+                unit),
+      ),
       actions: [
         FlatButton(
           onPressed: () {
@@ -75,10 +82,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Height Estimator'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings_sharp),
-            onPressed: () => _showSettings(context),
-          )
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: ToggleButtons(
+              children: [
+                Text('m', style: TextStyle(fontSize: 20)),
+                Text('ft', style: TextStyle(fontSize: 20)),
+              ],
+              isSelected: selectedUnit,
+              borderWidth: 5,
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white70,
+              selectedColor: Colors.white,
+              onPressed: (int index) => _selectToggle(index),
+            ),
+          ),
         ],
       ),
       body: Column(

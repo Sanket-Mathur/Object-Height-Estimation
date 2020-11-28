@@ -42,26 +42,26 @@ class Buttons extends StatelessWidget {
               iconSize: 30,
             ),
           ),
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.blue,
-            child: IconButton(
-              icon: Icon(Icons.cloud_upload_outlined),
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 30,
-            ),
-          ),
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.blue,
-            child: IconButton(
-              icon: Icon(Icons.drafts_outlined),
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 30,
-            ),
-          ),
+          // CircleAvatar(
+          //   radius: 30,
+          //   backgroundColor: Colors.blue,
+          //   child: IconButton(
+          //     icon: Icon(Icons.cloud_upload_outlined),
+          //     onPressed: () {},
+          //     color: Colors.white,
+          //     iconSize: 30,
+          //   ),
+          // ),
+          // CircleAvatar(
+          //   radius: 30,
+          //   backgroundColor: Colors.blue,
+          //   child: IconButton(
+          //     icon: Icon(Icons.drafts_outlined),
+          //     onPressed: () {},
+          //     color: Colors.white,
+          //     iconSize: 30,
+          //   ),
+          // ),
         ],
       ),
     );
