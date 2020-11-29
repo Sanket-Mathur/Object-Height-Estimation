@@ -92,7 +92,7 @@ while True:
 	imgDil = cv2.dilate(imgCanny, kernel, iterations=1)
 	found = getContour(imgDil, img)
 
-	hstack = np.hstack([img, result, mask])
+	hstack = np.hstack([img, result])
 
 	cv2.imshow('Stacked', hstack)
 

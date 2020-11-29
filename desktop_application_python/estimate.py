@@ -2,7 +2,7 @@ from cv2 import cv2
 import pickle
 import numpy as np
 from math import sqrt
-
+from tkinter import filedialog
 
 save = open('Values/save.dat', 'rb')
 
@@ -32,6 +32,12 @@ def mousePoints(event, x, y, flags, params):
         points[counter] = x,y
         counter += 1
 
+# Printing the estimate on the image
+def addEstimate(img, str):
+	font = cv2.FONT_HERSHEY_SIMPLEX 
+	image = cv2.putText(img, str, (10, 30), font,  1, (255, 0, 0), 2, cv2.LINE_AA) 
+   
+
 
 db = pickle.load(save)
 try:
@@ -40,8 +46,8 @@ except:
     print('Nope')
     exit(0)
 
-path = 'User/'
-fname = input('Enter the name of the file: ')
+path = ''
+fname = filedialog.askopenfilename()
 img = cv2.imread(path + fname)
 
 imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -77,6 +83,9 @@ while True:
 
 dist = abs(points[0,1] - points[1,1])
 print('Height Estimate: {:.2f}m'.format(dist / h))
+
+addEstimate(img, '{:.2f}m'.format(dist / h))
+cv2.imshow('Image', img)
 
 while not (cv2.waitKey(1) & 0xFF == ord('q')):
 	pass
