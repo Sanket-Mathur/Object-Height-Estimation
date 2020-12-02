@@ -96,18 +96,18 @@ while True:
 
 	cv2.imshow('Stacked', hstack)
 
-
-	if cv2.waitKey(1) &0xFF == ord('q'):
+	key = cv2.waitKey(1) &0xFF
+	if key == ord('q'):
 		if read_temp:
 			cv2.destroyWindow('Parameters')
 			read_temp = False 
 		else:
 			break
-	elif cv2.waitKey(1) &0xFF == ord('p'):
+	elif key == ord('p'):
 		db = {}
 		takeVal()
 		read_temp = True
-	elif (cv2.waitKey(1) &0xFF == ord('s')) and read_temp:
+	elif (key == ord('s')) and read_temp:
 		# writing the current values into save.dat
 		write = open('Values/save.dat', 'wb')
 		pickle.dump(db, write)
@@ -115,10 +115,11 @@ while True:
 		write.close()
 		cv2.destroyWindow('Parameters')
 		read_temp = False
-	elif cv2.waitKey(1) &0xFF == ord('c'):
+	elif key == ord('c'):
 		# saving the images of the if its sharp and standard is recognicable
 		blur = cv2.Laplacian(img_copy, cv2.CV_64F).var()
-		if found and blur > 250:
+		print(found, blur)
+		if found and blur > 0:
 			nowTime = time.time()
 			cv2.imwrite('User'+'/'+str(int(blur))+"_"+str(nowTime)+".png", img_copy)
 			print('Captured')
